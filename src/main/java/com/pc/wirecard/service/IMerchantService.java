@@ -1,8 +1,7 @@
 package com.pc.wirecard.service;
 
+import java.math.BigDecimal;
 import java.util.Map;
-
-import com.pc.wirecard.model.entity.MerchantInfo;
 
 /**
  * @author gino.q
@@ -11,7 +10,7 @@ import com.pc.wirecard.model.entity.MerchantInfo;
  */
 public interface IMerchantService {
 	
-	public void loadInMemory();
-	public Map<String, MerchantInfo> getMerchantInfo();
+	public void loadMerchantCommissionRateInMemory();
+	public Map<String, BigDecimal> getMerchantCommissionRateMap();
 	
 }

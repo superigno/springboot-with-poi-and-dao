@@ -2,6 +2,7 @@ package com.pc.wirecard;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +28,16 @@ class MerchantServiceTest {
     private IMerchantService merchantService;
 	
 	@Test
+	void testFindMerchantCommission() {
+		
+		List<Object[]> list = (List<Object[]>) repository.find603MerchantCommission();
+		list.stream().forEach(obj -> {			
+			System.out.println(obj[0] + " "+obj[1] );			
+		});
+	}
+	
+	
+	@Test
 	void testFromDb() {
 		List<MerchantInfo> list = (List<MerchantInfo>) repository.findAll();
 		
@@ -41,12 +52,12 @@ class MerchantServiceTest {
 	
 	@Test
 	void testInMemory() {
-		merchantService.loadInMemory();
-		Map<String, MerchantInfo> map = merchantService.getMerchantInfo();
+		merchantService.loadMerchantCommissionRateInMemory();
+		Map<String, BigDecimal> map = merchantService.getMerchantCommissionRateMap();
 		System.out.println("Size: "+map.size());
 		assertTrue(map.size() > 0);
 		
-		map.forEach((key, value) -> System.out.println(key + ":" + value.getName()+" | "+value.getDisplayTradingName()));
+		map.forEach((key, value) -> System.out.println(key + ":" + value));
 		
 	}
 

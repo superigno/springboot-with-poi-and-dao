@@ -17,7 +17,7 @@ import com.pc.wirecard.core.externalreport.sheet.SheetOne;
 import com.pc.wirecard.model.MerchantNameAndDate;
 import com.pc.wirecard.model.externalreport.SheetOneInfo;
 import com.pc.wirecard.model.poiji.RoctextInfo;
-import com.pc.wirecard.util.FileUtils;
+import com.pc.wirecard.util.PoiUtils;
 import com.pc.wirecard.util.WirecardUtils;
 
 /**
@@ -42,14 +42,17 @@ public class ExternalReport implements IReport<RoctextInfo> {
 		final ISheet<SheetOneInfo> sheetOne = new SheetOne(workbook, md);
 		final List<SheetOneInfo> cellInfoList = externalSheetOneTransformer.transform(sourceFile.asList());
 		sheetOne.createSheet(cellInfoList);
+		
+		PoiUtils.autoSizeColumns(workbook);
+		
 		return workbook;
 	}
 	
 	@Override
 	public void saveToFile(Path destinationDir) throws IOException {
 		final String reportFilename = "External"+md.getMerchantName()+"Report"+md.getFormattedDate()+".xls";
-		final Path datedDirPath = FileUtils.getDatedPath(destinationDir, md.getFormattedDate());
-		WirecardUtils.writeToExcel(workbook, datedDirPath.resolve(reportFilename));
+		//final Path datedDirPath = FileUtils.getDatedPath(destinationDir, md.getFormattedDate());
+		WirecardUtils.writeToExcel(workbook, destinationDir.resolve(reportFilename));
 	}	
 
 }

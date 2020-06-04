@@ -53,7 +53,7 @@
 	</logger>
 
 	<root level="TRACE">
-		<appender-ref ref="ROLLINGFILE_FULL"/>
+		<!-- <appender-ref ref="ROLLINGFILE_FULL"/> remove for now -->
 	</root>
 
 </configuration>

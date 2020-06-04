@@ -109,9 +109,9 @@ public class SheetOne implements ISheet<SheetOneInfo> {
 		cellStyleCurrency.setDataFormat(workbook.createDataFormat().getFormat(PoiConstants.DataFormat.CURRENCY));
 		cellStyleText.setDataFormat(workbook.createDataFormat().getFormat(PoiConstants.DataFormat.TEXT));
 		
-		int rowNum = 1;
+		int rowNum = sheet.getLastRowNum();
 		for (SheetOneInfo info : list) {
-			Row row = sheet.createRow(rowNum++);
+			Row row = sheet.createRow(++rowNum);
 
 			populateCell(row, 0, info.getOrg(), cellStyleText);			
 			populateCell(row, 1, info.getMerchantId(), cellStyleText);			

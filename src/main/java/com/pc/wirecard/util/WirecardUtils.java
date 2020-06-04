@@ -12,15 +12,15 @@ import java.text.DecimalFormat;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.apache.poi.ss.usermodel.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.pc.wirecard.constant.WirecardConstants;
+import com.pc.wirecard.core.SourceFile;
 import com.pc.wirecard.model.MerchantNameAndDate;
-import com.pc.wirecard.model.entity.MerchantInfo;
-import com.pc.wirecard.model.internalreport.SheetOneInfo;
 import com.pc.wirecard.model.poiji.RoctextInfo;
 import com.poiji.bind.Poiji;
 import com.poiji.exception.PoijiExcelType;
@@ -108,30 +108,31 @@ public class WirecardUtils {
 		return mdrRate.multiply(baseAmount);
 	}
 	
-	public static BigDecimal getMerchantCommission(final RoctextInfo rocInfo, final MerchantInfo merchantInfo) {
-		final String merchantCommissionRateString = merchantInfo != null ? merchantInfo.getDccCommission() : "0";
-		final BigDecimal baseAmount = rocInfo.getBaseAmt() == null ? new BigDecimal(0) : rocInfo.getBaseAmt();
-		final BigDecimal sgdAmount = WirecardConstants.CURRENCY_BASE.equals(rocInfo.getCcy()) ? new BigDecimal(0) : baseAmount;
+	public static BigDecimal getMerchantCommission(final BigDecimal sgdAmount, final BigDecimal merchantCommissionRate) {
+		BigDecimal mcr = null;
+		try {
+			mcr = merchantCommissionRate.divide(new BigDecimal(100));
+		} catch (Exception e) {
+			mcr = new BigDecimal(0);
+		}
+		return sgdAmount.multiply(mcr);
+	}
+	
+	public static void validateDccWithEmptyBaseAmount(final SourceFile<RoctextInfo> sourceFile) throws IOException {
+		final List<RoctextInfo> list = sourceFile.asList().stream().filter(item -> (!WirecardConstants.CURRENCY_BASE.equals(item.getCcy()) && (item.getBaseAmt() == null || WirecardUtils.isZero(item.getBaseAmt())))).collect(Collectors.toList());
+		final StringBuilder sb = new StringBuilder();
 		
-		BigDecimal merchantCommissionRateBigDecimal = null;		
-		try {
-			merchantCommissionRateBigDecimal = new BigDecimal(merchantCommissionRateString).divide(new BigDecimal(100));
-		} catch (Exception e) {
-			merchantCommissionRateBigDecimal = new BigDecimal(0);
-		}		
-		return sgdAmount.multiply(merchantCommissionRateBigDecimal);
-	}
-	
-	public static BigDecimal getMerchantCommission(final SheetOneInfo cellInfo, final MerchantInfo merchantInfo) {
-		final String merchantCommissionRateString = merchantInfo != null ? merchantInfo.getDccCommission() : "0";
-		BigDecimal merchantCommissionRateBigDecimal = null;		
-		try {
-			merchantCommissionRateBigDecimal = new BigDecimal(merchantCommissionRateString).divide(new BigDecimal(100));
-		} catch (Exception e) {
-			merchantCommissionRateBigDecimal = new BigDecimal(0);
-		}		
-		return cellInfo.getSgdAmount().multiply(merchantCommissionRateBigDecimal);
-	}
-	
+		sb.append("The ff rows have DCC with an empty SGD Amount:");
+		sb.append(System.lineSeparator());
+		
+		list.forEach(info -> {
+			sb.append("Row "+(info.getRowIndex()+1)+": [Org ID: "+info.getOrg()+", Merchant ID: "+info.getMerchantId()+", Terminal ID: "+info.getTerminalId()+"]");
+			sb.append(System.lineSeparator());
+		});
+		
+		if (list.size() > 0) {
+			throw new IOException(sb.toString());
+		}
+	}	
 
 }

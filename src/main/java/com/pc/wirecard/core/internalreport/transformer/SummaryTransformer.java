@@ -12,6 +12,9 @@ import static com.pc.wirecard.constant.WirecardConstants.IR_SUMMARY_SUBHEADER_TO
 import static com.pc.wirecard.constant.WirecardConstants.IR_SUMMARY_SUBHEADER_TOTAL_SGD;
 import static com.pc.wirecard.constant.WirecardConstants.MAJOR_CURRENCIES;
 import static com.pc.wirecard.constant.WirecardConstants.OPTOUT_PRODUCTS;
+import static com.pc.wirecard.constant.WirecardConstants.ORDER_SUMMARY_MAJOR_CURRENCY;
+import static com.pc.wirecard.constant.WirecardConstants.ORDER_SUMMARY_MINOR_CURRENCY;
+import static com.pc.wirecard.constant.WirecardConstants.ORDER_SUMMARY_TOTALS;
 import static com.pc.wirecard.constant.WirecardConstants.PRODUCT_JCB_LOCAL;
 
 import java.math.BigDecimal;
@@ -24,7 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.pc.wirecard.core.ITransform;
-import com.pc.wirecard.model.entity.MerchantInfo;
 import com.pc.wirecard.model.internalreport.SheetOneInfo;
 import com.pc.wirecard.model.internalreport.SummaryInfo;
 import com.pc.wirecard.service.IMerchantService;
@@ -66,6 +68,8 @@ public class SummaryTransformer implements ITransform<SummaryInfo, SheetOneInfo>
 		final SummaryInfo infoTotalSettlement = getTotalSettlementInfo(infoTotalSgd);
 		final SummaryInfo infoTotalDccable = getTotalDccableInfo(infoSubtotalDcc, infoSubtotalNonDcc);
 		final SummaryInfo infoDccHitRate = getDccHitRateInfo(infoSubtotalDcc, infoTotalDccable);
+		final SummaryInfo infoBlankRow = new SummaryInfo();
+		infoBlankRow.setOrder(ORDER_SUMMARY_TOTALS);
 		summaryInfoList.add(infoSubtotalDcc);
 		summaryInfoList.add(infoSubtotalNonDcc);
 		summaryInfoList.add(infoMerchantCommission);
@@ -73,7 +77,7 @@ public class SummaryTransformer implements ITransform<SummaryInfo, SheetOneInfo>
 		summaryInfoList.add(infoSubtotalJcb);
 		summaryInfoList.add(infoTotalSgd);
 		summaryInfoList.add(infoTotalSettlement);
-		summaryInfoList.add(new SummaryInfo()); //Add blank row
+		summaryInfoList.add(infoBlankRow); //Add blank row
 		summaryInfoList.add(infoTotalDccable);
 		summaryInfoList.add(infoDccHitRate);
 	}
@@ -82,6 +86,7 @@ public class SummaryTransformer implements ITransform<SummaryInfo, SheetOneInfo>
 	private SummaryInfo getDccHitRateInfo(final SummaryInfo infoSubtotalDcc, final SummaryInfo infoTotalDccable) {
 		final SummaryInfo summaryInfo = new SummaryInfo();
 		final BigDecimal dccHitrate = infoSubtotalDcc.getTransactionAmountSgd().divide(infoTotalDccable.getSettledByCitiToPc(), 8, RoundingMode.HALF_UP);
+		summaryInfo.setOrder(ORDER_SUMMARY_TOTALS);
 		summaryInfo.setDescription(IR_SUMMARY_SUBHEADER_DCC_HIT_RATE);
 		summaryInfo.setSettledByCitiToPc(dccHitrate);
 		return summaryInfo;
@@ -91,6 +96,7 @@ public class SummaryTransformer implements ITransform<SummaryInfo, SheetOneInfo>
 	private SummaryInfo getTotalDccableInfo(final SummaryInfo infoSubtotalDcc, final SummaryInfo infoSubtotalNonDcc) {
 		final SummaryInfo summaryInfo = new SummaryInfo();
 		final BigDecimal totalDccable = infoSubtotalDcc.getTransactionAmountSgd().add(infoSubtotalNonDcc.getTransactionAmountSgd());
+		summaryInfo.setOrder(ORDER_SUMMARY_TOTALS);
 		summaryInfo.setDescription(IR_SUMMARY_SUBHEADER_TOTAL_DCCABLE);
 		summaryInfo.setSettledByCitiToPc(totalDccable);
 		return summaryInfo;
@@ -99,6 +105,7 @@ public class SummaryTransformer implements ITransform<SummaryInfo, SheetOneInfo>
 
 	private SummaryInfo getTotalSettlementInfo(final SummaryInfo infoTotalSgd) {
 		final SummaryInfo summaryInfo = new SummaryInfo();
+		summaryInfo.setOrder(ORDER_SUMMARY_TOTALS);
 		summaryInfo.setDescription(IR_SUMMARY_SUBHEADER_DAILY_SETTLEMENT_AMT_TO_MERCHANT_FROM_PC);
 		summaryInfo.setSettlementAmountToMerchant(infoTotalSgd.getSettlementAmountToMerchant());
 		return summaryInfo;
@@ -120,7 +127,7 @@ public class SummaryTransformer implements ITransform<SummaryInfo, SheetOneInfo>
 								.add(infoSubtotalLocal.getSettlementAmountToMerchant()
 										.add(infoSubtotalJcb.getSettlementAmountToMerchant()))));
 		
-		
+		summaryInfo.setOrder(ORDER_SUMMARY_TOTALS);
 		summaryInfo.setDescription(IR_SUMMARY_SUBHEADER_TOTAL_SGD);
 		summaryInfo.setSettledByCitiToPc(totalSgdSettledByCitiToPc);
 		summaryInfo.setSettlementAmountToMerchant(totalSgdSettledAmountToMerchant);
@@ -132,7 +139,8 @@ public class SummaryTransformer implements ITransform<SummaryInfo, SheetOneInfo>
 		final SummaryInfo summaryInfo = new SummaryInfo();
 		final double totalTransactionAmountSgd = summaryInfoList.stream().mapToDouble(info -> info.getTransactionAmountSgd().doubleValue()).sum();
 		final double totalSettlementAmountToMerchant = summaryInfoList.stream().mapToDouble(info -> info.getSettlementAmountToMerchant().doubleValue()).sum();
-		final double totalMdrPayByMerchant = summaryInfoList.stream().mapToDouble(info -> info.getMdrPayByMerchant().doubleValue()).sum();		
+		final double totalMdrPayByMerchant = summaryInfoList.stream().mapToDouble(info -> info.getMdrPayByMerchant().doubleValue()).sum();
+		summaryInfo.setOrder(ORDER_SUMMARY_TOTALS);
 		summaryInfo.setDescription(IR_SUMMARY_SUBHEADER_SUBTOTAL_DCC_OPTIN);
 		summaryInfo.setTransactionAmountSgd(new BigDecimal(totalTransactionAmountSgd));
 		summaryInfo.setSettlementAmountToMerchant(new BigDecimal(totalSettlementAmountToMerchant));
@@ -150,6 +158,7 @@ public class SummaryTransformer implements ITransform<SummaryInfo, SheetOneInfo>
 		final double totalSettlementAmountToMerchant = totalSettledByCitiToPc;
 		final double totalMdrPayByMerchant = totalTransactionAmountSgd - totalSettlementAmountToMerchant;
 		
+		summaryInfo.setOrder(ORDER_SUMMARY_TOTALS);
 		summaryInfo.setDescription(IR_SUMMARY_SUBHEADER_SUBTOTAL_NONDCC_OPTOUT);
 		summaryInfo.setSettledByCitiToPc(new BigDecimal(totalSettledByCitiToPc));
 		summaryInfo.setTransactionAmountSgd(new BigDecimal(totalTransactionAmountSgd));
@@ -163,6 +172,7 @@ public class SummaryTransformer implements ITransform<SummaryInfo, SheetOneInfo>
 	private SummaryInfo getMerchantCommissionInfo(final List<SummaryInfo> summaryInfoList) {
 		final SummaryInfo summaryInfo = new SummaryInfo();
 		final double totalSettlementAmountToMerchant = summaryInfoList.stream().mapToDouble(info -> info.getMerchantCommission().doubleValue()).sum();
+		summaryInfo.setOrder(ORDER_SUMMARY_TOTALS);
 		summaryInfo.setDescription(IR_SUMMARY_SUBHEADER_MERCHANT_COMMISSION);
 		summaryInfo.setSettlementAmountToMerchant(new BigDecimal(totalSettlementAmountToMerchant));
 		return summaryInfo;
@@ -182,6 +192,7 @@ public class SummaryTransformer implements ITransform<SummaryInfo, SheetOneInfo>
 		final double totalSettlementAmountToMerchant = totalSettledByCitiToPc;
 		final double totalMdrPayByMerchant = totalTransactionAmountSgd - totalSettlementAmountToMerchant;
 		
+		summaryInfo.setOrder(ORDER_SUMMARY_TOTALS);
 		summaryInfo.setDescription(IR_SUMMARY_SUBHEADER_SUBTOTAL_LOCAL_CARD_TRANSACTIONS);
 		summaryInfo.setSettledByCitiToPc(new BigDecimal(totalSettledByCitiToPc));
 		summaryInfo.setTransactionAmountSgd(new BigDecimal(totalTransactionAmountSgd));
@@ -201,6 +212,7 @@ public class SummaryTransformer implements ITransform<SummaryInfo, SheetOneInfo>
 		final double totalSettlementAmountToMerchant = totalSettledByCitiToPc;
 		final double totalMdrPayByMerchant = totalTransactionAmountSgd - totalSettlementAmountToMerchant;
 		
+		summaryInfo.setOrder(ORDER_SUMMARY_TOTALS);
 		summaryInfo.setDescription(IR_SUMMARY_SUBHEADER_SUBTOTAL_JCB_TRANSACTIONS);
 		summaryInfo.setSettledByCitiToPc(new BigDecimal(totalSettledByCitiToPc));
 		summaryInfo.setTransactionAmountSgd(new BigDecimal(totalTransactionAmountSgd));
@@ -215,8 +227,8 @@ public class SummaryTransformer implements ITransform<SummaryInfo, SheetOneInfo>
 		final SummaryInfo summaryInfo = new SummaryInfo();
 		final boolean isMajorCurrency = Arrays.asList(MAJOR_CURRENCIES).contains(cellInfo.getCcy());
 		final String currency = isMajorCurrency ? cellInfo.getCcy() : CURRENCY_BASE+" "+cellInfo.getCcy();
-		final int order = isMajorCurrency ? 1 : 2;
-		final MerchantInfo merchantInfo = merchantService.getMerchantInfo().get(cellInfo.getMerchantId());
+		final int order = isMajorCurrency ? ORDER_SUMMARY_MAJOR_CURRENCY : ORDER_SUMMARY_MINOR_CURRENCY;
+		final BigDecimal merchantCommissionRate = merchantService.getMerchantCommissionRateMap().get(cellInfo.getMerchantId());
 		
 		summaryInfo.setOrder(order);
 		summaryInfo.setDescription(currency);
@@ -227,7 +239,7 @@ public class SummaryTransformer implements ITransform<SummaryInfo, SheetOneInfo>
 		summaryInfo.setTransactionAmountSgd(cellInfo.getSgdAmount());
 		summaryInfo.setSettlementAmountToMerchant(cellInfo.getSgdPayment());
 		summaryInfo.setMdrPayByMerchant(cellInfo.getSgdAmount().subtract(cellInfo.getSgdPayment()));
-		summaryInfo.setMerchantCommission(WirecardUtils.getMerchantCommission(cellInfo, merchantInfo));
+		summaryInfo.setMerchantCommission(WirecardUtils.getMerchantCommission(cellInfo.getSgdAmount(), merchantCommissionRate));
 		
 		return summaryInfo;
 	}

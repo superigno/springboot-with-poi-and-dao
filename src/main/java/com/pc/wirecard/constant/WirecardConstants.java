@@ -89,6 +89,10 @@ public final class WirecardConstants {
 	public static final String CURRENCY_MAJOR_NZD = "NZD";
 	public static final String CURRENCY_MAJOR_USD = "USD"; 
 	
+	public static final int ORDER_SUMMARY_MAJOR_CURRENCY = 1;
+	public static final int ORDER_SUMMARY_MINOR_CURRENCY = 2;
+	public static final int ORDER_SUMMARY_TOTALS = 3;
+	
 	/*
 	 Product 1: Citibank Singapore Issued Visa card products
 

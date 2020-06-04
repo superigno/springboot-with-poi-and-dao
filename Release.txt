@@ -1,4 +1,11 @@
 Release Notes:
 		
+v0-0-02: 2020-06-03 Gino [TCITSGP-26]		
+	1. Make the backup folder dated and remove the dated folders for the internal/external reports
+	2. Fix merchant info retrieval
+	3. Auto resize columns
+	4. Summary sheet display of totals fix	
+	5. Logging enhancements	
+		
 v0-0-01: 2020-06-03 Gino [TCITSGP-26]
 		1. Initial release 

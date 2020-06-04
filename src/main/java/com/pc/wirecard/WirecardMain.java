@@ -12,10 +12,12 @@ import org.springframework.stereotype.Component;
 
 import com.pc.wirecard.model.ApplicationProperties;
 import com.pc.wirecard.model.Email;
+import com.pc.wirecard.model.MerchantNameAndDate;
 import com.pc.wirecard.service.IEmailService;
 import com.pc.wirecard.service.IReportService;
 import com.pc.wirecard.service.MerchantService;
 import com.pc.wirecard.util.FileUtils;
+import com.pc.wirecard.util.WirecardUtils;
 
 /**
  * @author gino.q
@@ -44,7 +46,7 @@ public class WirecardMain {
 	
 	@Scheduled(fixedRateString = "#{@getApplicationProperties.getDbReloadPeriodInMinutes() * 60000}")
 	public void loadMerchantInfo() {
-		merchantService.loadInMemory();
+		merchantService.loadMerchantCommissionRateInMemory();
 		logger.debug("Merchant info reloaded.");
 		
 	}
@@ -74,9 +76,10 @@ public class WirecardMain {
 				successCtr++;				
 			} catch (Exception e) {
 				logger.error("Error converting report {}: {}", file.getName(), e.getMessage());
-				logger.trace("Error:", e);
+				logger.error("Details:", e);
 				moveToPendingFolder(sourceFilePath);
 				sb.append(file.getName()+" - "+e.getMessage());
+				sb.append(System.lineSeparator());
 				sb.append(System.lineSeparator());
 				failedCtr++;
 			}
@@ -100,14 +103,15 @@ public class WirecardMain {
 	
 	private void moveToBackupFolder(Path sourceFile) {
 		final Path pendingDir = Paths.get(props.getBackupDir());
-		FileUtils.moveToFolder(sourceFile, pendingDir);
+		final MerchantNameAndDate md = WirecardUtils.extractMerchantNameAndDateFromFilename(sourceFile.getFileName().toString());
+		FileUtils.moveToDatedFolder(sourceFile, pendingDir, md.getFormattedDate());
 	}
 	
 	private void sendEmailForFailedTransactions(StringBuilder sb) {
 		logger.info("Sending email notification for failed reports...");
 		sb.append(System.lineSeparator());
 		sb.append(System.lineSeparator());
-		sb.append("File(s) have been moved to "+props.getPendingDir()+". See full logs for details.");
+		sb.append("File(s) have been moved to "+props.getPendingDir()+". See logs for details.");
 		sendEmail(sb.toString());
 	}
 	
@@ -121,8 +125,7 @@ public class WirecardMain {
 			emailService.sendMail(email);
 			logger.info("Email sent.");
 		} catch (Exception e) {
-			logger.trace("Error in sending email: ", e);
-			logger.error("Error in sending email");
+			logger.error("Error in sending email", e);
 		}				
 	}
 	
@@ -140,8 +143,7 @@ public class WirecardMain {
 						emailService.sendMail(email);
 						logger.info("Email sent");
 					} catch (Exception e) {
-						logger.trace("Error in sending email: ", e);
-						logger.error("Error in sending email");
+						logger.error("Error in sending email: ", e);
 					}
 				}
 			}			

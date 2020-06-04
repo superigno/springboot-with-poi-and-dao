@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import com.pc.wirecard.constant.WirecardConstants;
 import com.pc.wirecard.core.ITransform;
-import com.pc.wirecard.model.entity.MerchantInfo;
 import com.pc.wirecard.model.externalreport.SheetOneInfo;
 import com.pc.wirecard.model.poiji.RoctextInfo;
 import com.pc.wirecard.service.IMerchantService;
@@ -32,11 +31,12 @@ public class SheetOneTransformer implements ITransform<SheetOneInfo, RoctextInfo
 	}
 	
 	private SheetOneInfo map(RoctextInfo rocInfo) {
-		final MerchantInfo merchantInfo = merchantService.getMerchantInfo().get(rocInfo.getMerchantId());
+		final BigDecimal merchantCommissionRate = merchantService.getMerchantCommissionRateMap().get(rocInfo.getMerchantId());
 		final SheetOneInfo info = new SheetOneInfo();
-		final BigDecimal sgdAmount = WirecardConstants.CURRENCY_BASE.equals(rocInfo.getCcy()) ? new BigDecimal(0) : rocInfo.getBaseAmt();
+		final BigDecimal baseAmount = rocInfo.getBaseAmt() == null ? new BigDecimal(0) : rocInfo.getBaseAmt();
+		final BigDecimal sgdAmount = WirecardConstants.CURRENCY_BASE.equals(rocInfo.getCcy()) ? new BigDecimal(0) : baseAmount;
 		final BigDecimal mdrRate = WirecardUtils.getMdrAmount(rocInfo);
-		final BigDecimal commission = WirecardUtils.getMerchantCommission(rocInfo, merchantInfo);
+		final BigDecimal commission = WirecardUtils.getMerchantCommission(sgdAmount, merchantCommissionRate);
 		final BigDecimal creditAmount = sgdAmount.subtract(mdrRate).add(commission);		
 		
 		info.setMid(rocInfo.getMerchantId());

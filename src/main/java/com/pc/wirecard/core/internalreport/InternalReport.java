@@ -19,7 +19,7 @@ import com.pc.wirecard.model.MerchantNameAndDate;
 import com.pc.wirecard.model.internalreport.SheetOneInfo;
 import com.pc.wirecard.model.internalreport.SummaryInfo;
 import com.pc.wirecard.model.poiji.RoctextInfo;
-import com.pc.wirecard.util.FileUtils;
+import com.pc.wirecard.util.PoiUtils;
 import com.pc.wirecard.util.WirecardUtils;
 
 /**
@@ -53,14 +53,16 @@ public class InternalReport implements IReport<RoctextInfo> {
 		sheetOne.createSheet(cellInfoList);
 		sheetTwo.createSheet(summaryCellInfoList);
 		
+		PoiUtils.autoSizeColumns(workbook);
+		
 		return workbook;
 	}
 
 	@Override
 	public void saveToFile(Path destinationDir) throws IOException {
 		final String reportFilename = "Internal"+md.getMerchantName()+"Report"+md.getFormattedDate()+".xls";
-		final Path datedDirPath = FileUtils.getDatedPath(destinationDir, md.getFormattedDate());
-		WirecardUtils.writeToExcel(workbook, datedDirPath.resolve(reportFilename));		
+		//final Path datedDirPath = FileUtils.getDatedPath(destinationDir, md.getFormattedDate());
+		WirecardUtils.writeToExcel(workbook, destinationDir.resolve(reportFilename));		
 	}
 
 }

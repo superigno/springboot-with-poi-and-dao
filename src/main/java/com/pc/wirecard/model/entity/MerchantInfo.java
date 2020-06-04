@@ -43,6 +43,7 @@ public class MerchantInfo {
 	private Integer organizationId;
 	private String merchantBatchId;
 	private String description;
+	private Integer status;
 	private Integer createdBy;
 	private String createdByName;
 	private Integer lastModifiedBy;
@@ -257,6 +258,12 @@ public class MerchantInfo {
 	public void setMerchantType(String merchantType) {
 		this.merchantType = merchantType;
 	}
+	public Integer getStatus() {
+		return status;
+	}
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
 	
 	@Override
 	public String toString() {
@@ -268,10 +275,11 @@ public class MerchantInfo {
 				+ phone + ", fax=" + fax + ", contactPerson=" + contactPerson + ", contactEmail=" + contactEmail
 				+ ", baseCurrency=" + baseCurrency + ", rateCategory=" + rateCategory + ", rateCategoryMcp="
 				+ rateCategoryMcp + ", organizationId=" + organizationId + ", merchantBatchId=" + merchantBatchId
-				+ ", description=" + description + ", createdBy=" + createdBy + ", createdByName=" + createdByName
-				+ ", lastModifiedBy=" + lastModifiedBy + ", lastModifiedByName=" + lastModifiedByName + ", clientId="
-				+ clientId + ", currencyWhitelist=" + currencyWhitelist + ", currencyBlacklist=" + currencyBlacklist
-				+ ", dccCardtypeList=" + dccCardtypeList + ", merchantType=" + merchantType + "]";
+				+ ", description=" + description + ", status=" + status + ", createdBy=" + createdBy
+				+ ", createdByName=" + createdByName + ", lastModifiedBy=" + lastModifiedBy + ", lastModifiedByName="
+				+ lastModifiedByName + ", clientId=" + clientId + ", currencyWhitelist=" + currencyWhitelist
+				+ ", currencyBlacklist=" + currencyBlacklist + ", dccCardtypeList=" + dccCardtypeList
+				+ ", merchantType=" + merchantType + "]";
 	}
 	
 }
