@@ -31,7 +31,7 @@ public class MerchantService implements IMerchantService {
 
 	@Override
 	public void loadMerchantCommissionRateInMemory() {
-		final List<Object[]> list = (List<Object[]>) repository.find603MerchantCommission();		
+		final List<Object[]> list = (List<Object[]>) repository.find603MerchantCommissionRate();		
 		list.forEach(obj -> {
 			final String merchantId = ((String) obj[0]).substring(6);
 			final String merchantCommissionRateString = (String) obj[1];
@@ -39,7 +39,7 @@ public class MerchantService implements IMerchantService {
 			try {
 				merchantCommissionRateBigDecimal = new BigDecimal(merchantCommissionRateString);
 			} catch (Exception e) {
-				logger.error("Error in converting merchant commission rate to number: {}", merchantCommissionRateString);
+				logger.error("Error converting merchant commission rate for merchant id: {}. Defaulting to 0.", merchantId);
 			}
 			merchantCommissionRateMap.put(merchantId, merchantCommissionRateBigDecimal);	
 			logger.trace("Reloaded rate info for merchant id: {}", merchantId);

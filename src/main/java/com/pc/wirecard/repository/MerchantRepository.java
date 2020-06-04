@@ -20,7 +20,7 @@ public interface MerchantRepository extends CrudRepository<MerchantInfo, Long> {
 	List<MerchantInfo> findWhereStatusIsZero();
 
 	// bank_merchant_id should essentially be 000603xxxxxxxxx format, if lesser than that (future bank_merchant_ids), use padding for it to be still valid
-	@Query(value = "SELECT LPAD(bank_merchant_id, 15, \"000603000000000\"), dcc_commission FROM merchant WHERE status = 0 AND LEFT(LPAD(bank_merchant_id, 15, \"000603000000000\"), 6) = '000603'", nativeQuery = true)
-	public List<Object[]> find603MerchantCommission();
+	@Query(value = "SELECT DISTINCT LPAD(bank_merchant_id, 15, \"000603000000000\"), dcc_commission FROM merchant WHERE status = 0 AND LEFT(LPAD(bank_merchant_id, 15, \"000603000000000\"), 6) = '000603'", nativeQuery = true)
+	public List<Object[]> find603MerchantCommissionRate();
 
 }

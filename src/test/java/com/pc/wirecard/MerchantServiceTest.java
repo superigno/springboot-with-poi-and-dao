@@ -30,7 +30,7 @@ class MerchantServiceTest {
 	@Test
 	void testFindMerchantCommission() {
 		
-		List<Object[]> list = (List<Object[]>) repository.find603MerchantCommission();
+		List<Object[]> list = (List<Object[]>) repository.find603MerchantCommissionRate();
 		list.stream().forEach(obj -> {			
 			System.out.println(obj[0] + " "+obj[1] );			
 		});

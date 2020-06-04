@@ -126,7 +126,7 @@ public class WirecardUtils {
 		sb.append(System.lineSeparator());
 		
 		list.forEach(info -> {
-			sb.append("Row "+(info.getRowIndex()+1)+": [Org ID: "+info.getOrg()+", Merchant ID: "+info.getMerchantId()+", Terminal ID: "+info.getTerminalId()+"]");
+			sb.append("Row "+(info.getRowIndex()+1)+": [ORG: "+info.getOrg()+", MERCHANTID: "+info.getMerchantId()+", ACQREFNUM: "+info.getAcqRefNum()+"]");
 			sb.append(System.lineSeparator());
 		});
 		
