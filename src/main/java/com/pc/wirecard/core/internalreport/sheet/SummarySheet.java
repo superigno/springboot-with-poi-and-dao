@@ -82,7 +82,7 @@ public class SummarySheet implements ISheet<SummaryInfo> {
 		headerStyle.setFont(headerFont);
 		headerStyle.setFillForegroundColor(IndexedColors.DARK_BLUE.getIndex());
 		headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-		headerStyle.setDataFormat(workbook.createDataFormat().getFormat(PoiConstants.DataFormat.TEXT));
+		headerStyle.setDataFormat(workbook.createDataFormat().getFormat(PoiConstants.DataFormat.GENERAL));
 
 		Row headerRow = sheet.createRow(0);
 		for (int i = 0; i < headers.length; i++) {
@@ -94,16 +94,22 @@ public class SummarySheet implements ISheet<SummaryInfo> {
 	}
 
 	private void populateTopCells(final Sheet sheet, final List<SummaryInfo> list) {
-
 		final CellStyle cellStyleGeneral = workbook.createCellStyle();
 		final CellStyle cellStyleNumber = workbook.createCellStyle();
+		
+		final Font font = workbook.createFont();
+		font.setFontName(PoiConstants.Font.NAME);
+		font.setFontHeightInPoints(PoiConstants.Font.SIZE_11);
+		
 		cellStyleGeneral.setDataFormat(workbook.createDataFormat().getFormat(PoiConstants.DataFormat.GENERAL));
 		cellStyleNumber.setDataFormat(workbook.createDataFormat().getFormat(PoiConstants.DataFormat.NUMBER));
+		cellStyleGeneral.setFont(font);
+		cellStyleNumber.setFont(font);
 
 		int rowNum = sheet.getLastRowNum();
 		for (SummaryInfo info : list) {
 			Row row = sheet.createRow(++rowNum);
-			populateCell(row, 0, info.getDescription());
+			populateCell(row, 0, info.getDescription(), cellStyleGeneral);
 			populateCell(row, 1, info.getGrossAmountFromCiti().doubleValue(), cellStyleNumber);
 			populateCell(row, 2, info.getSettledByCitiToPc().doubleValue(), cellStyleNumber);
 			populateCell(row, 3, info.getCitiMdrCharge().doubleValue(), cellStyleNumber);
@@ -117,16 +123,23 @@ public class SummarySheet implements ISheet<SummaryInfo> {
 	}
 
 	private void populateBottomCells(final Sheet sheet, final List<SummaryInfo> list) {
-
 		final CellStyle headerStyle = workbook.createCellStyle();
 		final CellStyle cellStyleNumber = workbook.createCellStyle();
 		final CellStyle cellStylePercentage = workbook.createCellStyle();
+		
 		final Font headerFont = workbook.createFont();
 		headerFont.setBold(true);
-		headerStyle.setFont(headerFont);
+		
+		final Font font = workbook.createFont();
+		font.setFontName(PoiConstants.Font.NAME);
+		font.setFontHeightInPoints(PoiConstants.Font.SIZE_11);
+		
 		cellStyleNumber.setDataFormat(workbook.createDataFormat().getFormat(PoiConstants.DataFormat.NUMBER));
 		cellStylePercentage.setDataFormat(workbook.createDataFormat().getFormat(PoiConstants.DataFormat.PERCENTAGE));
-
+		headerStyle.setFont(headerFont);
+		cellStyleNumber.setFont(font);
+		cellStylePercentage.setFont(font);
+		
 		int rowNum = sheet.getLastRowNum() + 1;
 		for (SummaryInfo info : list) {
 

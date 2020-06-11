@@ -87,6 +87,8 @@ public class SheetOne implements ISheet<SheetOneInfo> {
 
 		final CellStyle headerStyle = workbook.createCellStyle();
 		final Font headerFont = workbook.createFont();
+		headerFont.setFontName(PoiConstants.Font.NAME);
+		headerFont.setFontHeightInPoints(PoiConstants.Font.SIZE_9);
 		headerFont.setBold(true);
 		headerStyle.setFont(headerFont);
 		headerStyle.setDataFormat(workbook.createDataFormat().getFormat(PoiConstants.DataFormat.TEXT));
@@ -101,13 +103,24 @@ public class SheetOne implements ISheet<SheetOneInfo> {
 	}
 
 	private void populateCells(final Sheet sheet, final List<SheetOneInfo> list) {
-
+		final CellStyle cellStyleGeneral = workbook.createCellStyle();
 		final CellStyle cellStyleDate = workbook.createCellStyle();
 		final CellStyle cellStyleCurrency = workbook.createCellStyle();
 		final CellStyle cellStyleText = workbook.createCellStyle();
+		
+		final Font font = workbook.createFont();
+		font.setFontName(PoiConstants.Font.NAME);
+		font.setFontHeightInPoints(PoiConstants.Font.SIZE_9);
+				
 		cellStyleDate.setDataFormat(workbook.createDataFormat().getFormat(PoiConstants.DataFormat.DATE));
 		cellStyleCurrency.setDataFormat(workbook.createDataFormat().getFormat(PoiConstants.DataFormat.CURRENCY));
 		cellStyleText.setDataFormat(workbook.createDataFormat().getFormat(PoiConstants.DataFormat.TEXT));
+		cellStyleGeneral.setDataFormat(workbook.createDataFormat().getFormat(PoiConstants.DataFormat.GENERAL));
+		
+		cellStyleGeneral.setFont(font);
+		cellStyleDate.setFont(font);
+		cellStyleCurrency.setFont(font);
+		cellStyleText.setFont(font);		
 		
 		int rowNum = sheet.getLastRowNum();
 		for (SheetOneInfo info : list) {
@@ -146,21 +159,21 @@ public class SheetOne implements ISheet<SheetOneInfo> {
 			populateCell(row, 30, info.getRocText(), cellStyleText);
 			
 			if (isZero(info.getSgdAmount())) {
-				populateCell(row, 31, "");				
+				populateCell(row, 31, "", cellStyleGeneral);				
 			} else {
-				populateCell(row, 31, roundUpTwoDecimalPlaces(info.getSgdAmount()).doubleValue());
+				populateCell(row, 31, roundUpTwoDecimalPlaces(info.getSgdAmount()).doubleValue(), cellStyleGeneral);
 			}
 			
 			if (isZero(info.getSgdPayment())) {
-				populateCell(row, 32, "");				
+				populateCell(row, 32, "", cellStyleGeneral);				
 			} else {
-				populateCell(row, 32, roundUpTwoDecimalPlaces(info.getSgdPayment()).doubleValue());
+				populateCell(row, 32, roundUpTwoDecimalPlaces(info.getSgdPayment()).doubleValue(), cellStyleGeneral);
 			}
 			
 			if (isZero(info.getExceptionSgdAmount())) {
-				populateCell(row, 33, "");				
+				populateCell(row, 33, "", cellStyleGeneral);				
 			} else {
-				populateCell(row, 33, roundUpTwoDecimalPlaces(info.getExceptionSgdAmount()).doubleValue());
+				populateCell(row, 33, roundUpTwoDecimalPlaces(info.getExceptionSgdAmount()).doubleValue(), cellStyleGeneral);
 			}
 			
 		}

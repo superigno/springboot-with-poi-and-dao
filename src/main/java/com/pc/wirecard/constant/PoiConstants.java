@@ -9,6 +9,12 @@ public final class PoiConstants {
 
 	private PoiConstants() {}
 	
+	public final class Font {
+		public static final short SIZE_9 = 9;
+		public static final short SIZE_11 = 11;
+		public static final String NAME = "Calibri";
+	}
+	
 	public final class DataFormat {		
 		public static final String GENERAL = "General";
 		public static final String TEXT = "@";

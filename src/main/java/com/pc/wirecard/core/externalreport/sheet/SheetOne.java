@@ -61,7 +61,11 @@ public class SheetOne implements ISheet<SheetOneInfo> {
 				ER_HEADER_REMARK, ER_HEADER_RRN_OCENIA };
 
 		final CellStyle headerStyle = workbook.createCellStyle();
+		
 		final Font headerFont = workbook.createFont();
+		headerFont.setFontName(PoiConstants.Font.NAME);
+		headerFont.setFontHeightInPoints(PoiConstants.Font.SIZE_9);
+
 		headerStyle.setFont(headerFont);
 		headerStyle.setFillForegroundColor(IndexedColors.PALE_BLUE.getIndex());
 		headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
@@ -80,9 +84,17 @@ public class SheetOne implements ISheet<SheetOneInfo> {
 		final CellStyle cellStyleDate = workbook.createCellStyle();
 		final CellStyle cellStyleCurrency = workbook.createCellStyle();
 		final CellStyle cellStyleText = workbook.createCellStyle();
+		
+		final Font font = workbook.createFont();
+		font.setFontName(PoiConstants.Font.NAME);
+		font.setFontHeightInPoints(PoiConstants.Font.SIZE_9);
+		
 		cellStyleDate.setDataFormat(workbook.createDataFormat().getFormat(PoiConstants.DataFormat.DATE));
 		cellStyleCurrency.setDataFormat(workbook.createDataFormat().getFormat(PoiConstants.DataFormat.CURRENCY));
 		cellStyleText.setDataFormat(workbook.createDataFormat().getFormat(PoiConstants.DataFormat.TEXT));
+		cellStyleDate.setFont(font);
+		cellStyleCurrency.setFont(font);
+		cellStyleText.setFont(font);
 				
 		int rowNum = sheet.getLastRowNum();
 		for (SheetOneInfo info : list) {
