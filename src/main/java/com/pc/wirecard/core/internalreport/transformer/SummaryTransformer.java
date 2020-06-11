@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.pc.wirecard.constant.WirecardConstants;
 import com.pc.wirecard.core.ITransform;
 import com.pc.wirecard.model.internalreport.SheetOneInfo;
 import com.pc.wirecard.model.internalreport.SummaryInfo;
@@ -85,7 +86,7 @@ public class SummaryTransformer implements ITransform<SummaryInfo, SheetOneInfo>
 
 	private SummaryInfo getDccHitRateInfo(final SummaryInfo infoSubtotalDcc, final SummaryInfo infoTotalDccable) {
 		final SummaryInfo summaryInfo = new SummaryInfo();
-		final BigDecimal dccHitrate = infoSubtotalDcc.getTransactionAmountSgd().divide(infoTotalDccable.getSettledByCitiToPc(), 8, RoundingMode.HALF_UP);
+		final BigDecimal dccHitrate = infoSubtotalDcc.getTransactionAmountSgd().divide(infoTotalDccable.getSettledByCitiToPc(), WirecardConstants.BIGDECIMAL_QUOTIENT_SCALE, RoundingMode.HALF_UP);
 		summaryInfo.setOrder(ORDER_SUMMARY_TOTALS);
 		summaryInfo.setDescription(IR_SUMMARY_SUBHEADER_DCC_HIT_RATE);
 		summaryInfo.setSettledByCitiToPc(dccHitrate);

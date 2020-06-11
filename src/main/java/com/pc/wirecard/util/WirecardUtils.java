@@ -82,7 +82,7 @@ public class WirecardUtils {
 	}
 	
 	public static BigDecimal roundUpTwoDecimalPlaces(BigDecimal d) {
-		return d.setScale(2, RoundingMode.HALF_UP);		
+		return d.setScale(WirecardConstants.BIGDECIMAL_ROUNDING_SCALE, RoundingMode.HALF_UP);		
 	}
 	
 	public static boolean isZero(BigDecimal value) {
@@ -101,7 +101,7 @@ public class WirecardUtils {
 		final BigDecimal grossAmount = rocInfo.getoGrossAmt() == null ? new BigDecimal(0) : rocInfo.getoGrossAmt();
 		BigDecimal mdrRate = new BigDecimal(0);
 		try {
-			mdrRate = comAmount.divide(grossAmount, 8, RoundingMode.HALF_UP);
+			mdrRate = comAmount.divide(grossAmount, WirecardConstants.BIGDECIMAL_QUOTIENT_SCALE, RoundingMode.HALF_UP);
 		} catch (ArithmeticException e) {
 			mdrRate = new BigDecimal(0);
 		}
@@ -135,4 +135,12 @@ public class WirecardUtils {
 		}
 	}	
 
+	public static BigDecimal returnAsNegative(BigDecimal num) {
+		if (num.signum() == -1) {
+			return num;
+		} else {
+			return num.negate();
+		}
+	}
+	
 }

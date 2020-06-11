@@ -27,8 +27,24 @@ public class SheetOneTransformer implements ITransform<SheetOneInfo, RoctextInfo
 	
 	private SheetOneInfo map(RoctextInfo rocInfo) {
 		final SheetOneInfo internalInfo = new SheetOneInfo();
-		final BigDecimal sgdAmount = WirecardConstants.CURRENCY_BASE.equals(rocInfo.getCcy()) ? new BigDecimal(0) : rocInfo.getBaseAmt();
-		final BigDecimal sgdPayment = WirecardUtils.getSgdPayment(rocInfo);
+		final boolean isRefund = WirecardConstants.LOGIC_MODULE_REFUND.equals(rocInfo.getLogicModule());
+		BigDecimal sgdAmount = WirecardConstants.CURRENCY_BASE.equals(rocInfo.getCcy()) ? new BigDecimal(0) : rocInfo.getBaseAmt();
+		BigDecimal sgdPayment = WirecardUtils.getSgdPayment(rocInfo);		
+		BigDecimal transAmt = rocInfo.getTransAmt();
+		BigDecimal submitAmt = rocInfo.getSubmitAmt();
+		BigDecimal oGrossAmt = rocInfo.getoGrossAmt();
+		BigDecimal oComAmt = rocInfo.getoComAmt();
+		BigDecimal oNetAmt = rocInfo.getoNetAmt();
+		
+		if (isRefund) {
+			sgdAmount = WirecardUtils.returnAsNegative(sgdAmount);
+			sgdPayment = WirecardUtils.returnAsNegative(sgdPayment);		
+			transAmt = WirecardUtils.returnAsNegative(transAmt);
+			submitAmt = WirecardUtils.returnAsNegative(submitAmt);
+			oGrossAmt = WirecardUtils.returnAsNegative(oGrossAmt);
+			oComAmt = WirecardUtils.returnAsNegative(oComAmt);
+			oNetAmt = WirecardUtils.returnAsNegative(oNetAmt);		
+		}
 		
 		internalInfo.setOrg(rocInfo.getOrg());		
 		internalInfo.setMerchantId(rocInfo.getMerchantId());
@@ -39,7 +55,7 @@ public class SheetOneTransformer implements ITransform<SheetOneInfo, RoctextInfo
 		internalInfo.setCardNbr(rocInfo.getCardNbr());
 		internalInfo.setTransDate(rocInfo.getTransDate());
 		internalInfo.setCcy(rocInfo.getCcy());
-		internalInfo.setTransAmt(rocInfo.getTransAmt());
+		internalInfo.setTransAmt(transAmt);
 		internalInfo.setAuthCode(rocInfo.getAuthCode());
 		internalInfo.setCardType(rocInfo.getCardType());
 		internalInfo.setOnUsOffUsFlag(rocInfo.getOnUsOffUsFlag());
@@ -48,18 +64,18 @@ public class SheetOneTransformer implements ITransform<SheetOneInfo, RoctextInfo
 		internalInfo.setDescription(rocInfo.getDescription());
 		internalInfo.setPostDate(rocInfo.getPostDate());
 		internalInfo.setSubmitCcy(rocInfo.getSubmitCcy());
-		internalInfo.setSubmitAmt(rocInfo.getSubmitAmt());
+		internalInfo.setSubmitAmt(submitAmt);
 		internalInfo.setSubMedia(rocInfo.getSubMedia());
 		internalInfo.setLogicModule(rocInfo.getLogicModule());
 		internalInfo.setQualIndicator(rocInfo.getQualIndicator());
 		internalInfo.setDataEntryMode(rocInfo.getDataEntryMode());
 		internalInfo.setMcc(rocInfo.getMcc());
 		internalInfo.setGapOsMode(rocInfo.getGapOsMode());
-		internalInfo.setoGrossAmt(rocInfo.getoGrossAmt());
-		internalInfo.setoComAmt(rocInfo.getoComAmt());
+		internalInfo.setoGrossAmt(oGrossAmt);
+		internalInfo.setoComAmt(oComAmt);
 		internalInfo.setoVatAmt(rocInfo.getoVatAmt());
 		internalInfo.setoOthAmt(rocInfo.getoOthAmt());
-		internalInfo.setoNetAmt(rocInfo.getoNetAmt());
+		internalInfo.setoNetAmt(oNetAmt);
 		internalInfo.setRocText(rocInfo.getRocText());
 		internalInfo.setSgdAmount(WirecardUtils.roundUpTwoDecimalPlaces(sgdAmount));
 		internalInfo.setSgdPayment(WirecardUtils.roundUpTwoDecimalPlaces(sgdPayment));
