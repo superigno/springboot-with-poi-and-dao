@@ -1,5 +1,10 @@
 Release Notes:
 		
+v0-0-04: 2020-06-15 Gino [TCITSGP-26]
+	1. internalreport/transformer/SheetOneTransformer - refactor computation for sgdPayment
+	2. externalreport/transformer/SheetOneTransformer - updated computations, make negative when refund
+	3. WirecardUtils - refactor getSgdPayment & getMdrAmount
+			
 v0-0-03: 2020-06-11 Gino [TCITSGP-26]
 	1. SheetOneTransformer - If transaction is a refund, make transamt, submitamt, o_grossamt, o_comamt, o_netamt, sgd_amount and sgd_payment negative
 	2. Minor refactors

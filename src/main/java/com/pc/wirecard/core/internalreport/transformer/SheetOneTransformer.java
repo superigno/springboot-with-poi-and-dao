@@ -28,13 +28,13 @@ public class SheetOneTransformer implements ITransform<SheetOneInfo, RoctextInfo
 	private SheetOneInfo map(RoctextInfo rocInfo) {
 		final SheetOneInfo internalInfo = new SheetOneInfo();
 		final boolean isRefund = WirecardConstants.LOGIC_MODULE_REFUND.equals(rocInfo.getLogicModule());
-		BigDecimal sgdAmount = WirecardConstants.CURRENCY_BASE.equals(rocInfo.getCcy()) ? new BigDecimal(0) : rocInfo.getBaseAmt();
-		BigDecimal sgdPayment = WirecardUtils.getSgdPayment(rocInfo);		
+		BigDecimal sgdAmount = WirecardConstants.CURRENCY_BASE.equals(rocInfo.getCcy()) ? BigDecimal.ZERO : rocInfo.getBaseAmt(); //should be ZERO on local transactions in internal report
 		BigDecimal transAmt = rocInfo.getTransAmt();
 		BigDecimal submitAmt = rocInfo.getSubmitAmt();
 		BigDecimal oGrossAmt = rocInfo.getoGrossAmt();
 		BigDecimal oComAmt = rocInfo.getoComAmt();
 		BigDecimal oNetAmt = rocInfo.getoNetAmt();
+		BigDecimal sgdPayment = WirecardUtils.getSgdPayment(oComAmt, oGrossAmt, sgdAmount);
 		
 		if (isRefund) {
 			sgdAmount = WirecardUtils.returnAsNegative(sgdAmount);
@@ -79,7 +79,7 @@ public class SheetOneTransformer implements ITransform<SheetOneInfo, RoctextInfo
 		internalInfo.setRocText(rocInfo.getRocText());
 		internalInfo.setSgdAmount(WirecardUtils.roundUpTwoDecimalPlaces(sgdAmount));
 		internalInfo.setSgdPayment(WirecardUtils.roundUpTwoDecimalPlaces(sgdPayment));
-		internalInfo.setExceptionSgdAmount(new BigDecimal(0));
+		internalInfo.setExceptionSgdAmount(BigDecimal.ZERO);
 		return internalInfo;		
 	}
 }

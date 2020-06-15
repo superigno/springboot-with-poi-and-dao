@@ -1,7 +1,5 @@
 package com.pc.wirecard.constant;
 
-import java.math.BigDecimal;
-
 /**
  * @author gino.q
  * @date June 1, 2020
@@ -11,7 +9,6 @@ public final class WirecardConstants {
 	
 	private WirecardConstants() {}
 	
-	public static final BigDecimal ZERO = new BigDecimal(0);
 	public static final String FILENAME_PATTERN = "(PUC-.+)-(\\d\\d-[a-zA-Z]{3}-\\d\\d\\d\\d).xls";
 	public static final int BIGDECIMAL_ROUNDING_SCALE = 2;
 	public static final int BIGDECIMAL_QUOTIENT_SCALE = 8;

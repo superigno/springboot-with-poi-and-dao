@@ -33,18 +33,26 @@ public class SheetOneTransformer implements ITransform<SheetOneInfo, RoctextInfo
 	private SheetOneInfo map(RoctextInfo rocInfo) {
 		final BigDecimal merchantCommissionRate = merchantService.getMerchantCommissionRateMap().get(rocInfo.getMerchantId());
 		final SheetOneInfo info = new SheetOneInfo();
-		final BigDecimal baseAmount = rocInfo.getBaseAmt() == null ? new BigDecimal(0) : rocInfo.getBaseAmt();
-		final BigDecimal sgdAmount = WirecardConstants.CURRENCY_BASE.equals(rocInfo.getCcy()) ? new BigDecimal(0) : baseAmount;
-		final BigDecimal mdrRate = WirecardUtils.getMdrAmount(rocInfo);
-		final BigDecimal commission = WirecardUtils.getMerchantCommission(sgdAmount, merchantCommissionRate);
-		final BigDecimal creditAmount = sgdAmount.subtract(mdrRate).add(commission);		
+		final boolean isRefund = WirecardConstants.LOGIC_MODULE_REFUND.equals(rocInfo.getLogicModule());
+		final BigDecimal baseAmount = rocInfo.getBaseAmt() == null ? BigDecimal.ZERO : rocInfo.getBaseAmt();
+		BigDecimal sgdAmount = WirecardConstants.CURRENCY_BASE.equals(rocInfo.getCcy()) ? rocInfo.getTransAmt() : baseAmount;
+		BigDecimal mdrAmount = WirecardUtils.getMdrAmount(rocInfo.getoComAmt(), rocInfo.getoGrossAmt(), sgdAmount);
+		BigDecimal commission = WirecardUtils.getMerchantCommission(sgdAmount, merchantCommissionRate);
+		BigDecimal creditAmount = sgdAmount.subtract(mdrAmount).add(commission);
+		
+		if (isRefund) {
+			sgdAmount = WirecardUtils.returnAsNegative(sgdAmount);
+			commission = WirecardUtils.returnAsNegative(commission);		
+			mdrAmount = WirecardUtils.returnAsNegative(mdrAmount);
+			creditAmount = WirecardUtils.returnAsNegative(creditAmount);		
+		}		
 		
 		info.setMid(rocInfo.getMerchantId());
 		info.setDate(rocInfo.getTransDate());
 		info.setCardNumber(rocInfo.getCardNbr());
 		info.setAuthorisationNumber(rocInfo.getAuthCode());
 		info.setTransactionSales(sgdAmount);
-		info.setMdrRate(mdrRate);
+		info.setMdrRate(mdrAmount);
 		info.setCommission(commission);
 		info.setCreditAmount(creditAmount);
 		info.setRemark(""); //leave blank

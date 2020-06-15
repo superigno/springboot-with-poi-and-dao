@@ -74,7 +74,7 @@ public class WirecardUtils {
 	
 	public static String formatToWirecardFormat(BigDecimal d) {
 		final DecimalFormat df = new DecimalFormat("#.##");
-		if (d.compareTo(new BigDecimal(0)) == 0) {
+		if (d.compareTo(BigDecimal.ZERO) == 0) {
 			return "";
 		} else {
 			return df.format(d);
@@ -86,26 +86,26 @@ public class WirecardUtils {
 	}
 	
 	public static boolean isZero(BigDecimal value) {
-		return value.compareTo(WirecardConstants.ZERO) == 0;
+		return value.compareTo(BigDecimal.ZERO) == 0;
 	}
 	
-	public static BigDecimal getSgdPayment(final RoctextInfo rocInfo) {
-		final BigDecimal baseAmount = rocInfo.getBaseAmt() == null ? new BigDecimal(0) : rocInfo.getBaseAmt();
-		final BigDecimal mdrAmount = getMdrAmount(rocInfo);
-		return baseAmount.subtract(mdrAmount);
+	public static BigDecimal getSgdPayment(final BigDecimal comAmount, final BigDecimal grossAmount, BigDecimal sgdAmount) {
+		sgdAmount = sgdAmount == null ? new BigDecimal(0) : sgdAmount;
+		final BigDecimal mdrAmount = getMdrAmount(comAmount, grossAmount, sgdAmount);
+		return sgdAmount.subtract(mdrAmount);
 	}
 	
-	public static BigDecimal getMdrAmount(final RoctextInfo rocInfo) {
-		final BigDecimal baseAmount = rocInfo.getBaseAmt() == null ? new BigDecimal(0) : rocInfo.getBaseAmt();
-		final BigDecimal comAmount = rocInfo.getoComAmt() == null ? new BigDecimal(0) : rocInfo.getoComAmt();
-		final BigDecimal grossAmount = rocInfo.getoGrossAmt() == null ? new BigDecimal(0) : rocInfo.getoGrossAmt();
+	public static BigDecimal getMdrAmount(BigDecimal comAmount, BigDecimal grossAmount, BigDecimal sgdAmount) {
+		sgdAmount = sgdAmount == null ? new BigDecimal(0) : sgdAmount;
+		comAmount = comAmount == null ? new BigDecimal(0) : comAmount;
+		grossAmount = grossAmount == null ? new BigDecimal(0) : grossAmount;
 		BigDecimal mdrRate = new BigDecimal(0);
 		try {
 			mdrRate = comAmount.divide(grossAmount, WirecardConstants.BIGDECIMAL_QUOTIENT_SCALE, RoundingMode.HALF_UP);
 		} catch (ArithmeticException e) {
 			mdrRate = new BigDecimal(0);
 		}
-		return mdrRate.multiply(baseAmount);
+		return mdrRate.multiply(sgdAmount);
 	}
 	
 	public static BigDecimal getMerchantCommission(final BigDecimal sgdAmount, final BigDecimal merchantCommissionRate) {
