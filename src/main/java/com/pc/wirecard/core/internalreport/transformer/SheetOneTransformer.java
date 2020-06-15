@@ -77,8 +77,8 @@ public class SheetOneTransformer implements ITransform<SheetOneInfo, RoctextInfo
 		internalInfo.setoOthAmt(rocInfo.getoOthAmt());
 		internalInfo.setoNetAmt(oNetAmt);
 		internalInfo.setRocText(rocInfo.getRocText());
-		internalInfo.setSgdAmount(WirecardUtils.roundUpTwoDecimalPlaces(sgdAmount));
-		internalInfo.setSgdPayment(WirecardUtils.roundUpTwoDecimalPlaces(sgdPayment));
+		internalInfo.setSgdAmount(sgdAmount);
+		internalInfo.setSgdPayment(sgdPayment);
 		internalInfo.setExceptionSgdAmount(BigDecimal.ZERO);
 		return internalInfo;		
 	}

@@ -35,9 +35,10 @@ public class SheetOneTransformer implements ITransform<SheetOneInfo, RoctextInfo
 		final SheetOneInfo info = new SheetOneInfo();
 		final boolean isRefund = WirecardConstants.LOGIC_MODULE_REFUND.equals(rocInfo.getLogicModule());
 		final BigDecimal baseAmount = rocInfo.getBaseAmt() == null ? BigDecimal.ZERO : rocInfo.getBaseAmt();
-		BigDecimal sgdAmount = WirecardConstants.CURRENCY_BASE.equals(rocInfo.getCcy()) ? rocInfo.getTransAmt() : baseAmount;
+		final boolean isLocal = WirecardConstants.CURRENCY_BASE.equals(rocInfo.getCcy());
+		BigDecimal sgdAmount = isLocal ? rocInfo.getTransAmt() : baseAmount;
 		BigDecimal mdrAmount = WirecardUtils.getMdrAmount(rocInfo.getoComAmt(), rocInfo.getoGrossAmt(), sgdAmount);
-		BigDecimal commission = WirecardUtils.getMerchantCommission(sgdAmount, merchantCommissionRate);
+		BigDecimal commission = isLocal ? BigDecimal.ZERO : WirecardUtils.getMerchantCommission(sgdAmount, merchantCommissionRate);
 		BigDecimal creditAmount = sgdAmount.subtract(mdrAmount).add(commission);
 		
 		if (isRefund) {
