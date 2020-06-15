@@ -90,20 +90,20 @@ public class WirecardUtils {
 	}
 	
 	public static BigDecimal getSgdPayment(final BigDecimal comAmount, final BigDecimal grossAmount, BigDecimal sgdAmount) {
-		sgdAmount = sgdAmount == null ? new BigDecimal(0) : sgdAmount;
+		sgdAmount = sgdAmount == null ? BigDecimal.ZERO : sgdAmount;
 		final BigDecimal mdrAmount = getMdrAmount(comAmount, grossAmount, sgdAmount);
 		return sgdAmount.subtract(mdrAmount);
 	}
 	
 	public static BigDecimal getMdrAmount(BigDecimal comAmount, BigDecimal grossAmount, BigDecimal sgdAmount) {
-		sgdAmount = sgdAmount == null ? new BigDecimal(0) : sgdAmount;
-		comAmount = comAmount == null ? new BigDecimal(0) : comAmount;
-		grossAmount = grossAmount == null ? new BigDecimal(0) : grossAmount;
-		BigDecimal mdrRate = new BigDecimal(0);
+		sgdAmount = sgdAmount == null ? BigDecimal.ZERO : sgdAmount;
+		comAmount = comAmount == null ? BigDecimal.ZERO : comAmount;
+		grossAmount = grossAmount == null ? BigDecimal.ZERO : grossAmount;
+		BigDecimal mdrRate = null;
 		try {
 			mdrRate = comAmount.divide(grossAmount, WirecardConstants.BIGDECIMAL_QUOTIENT_SCALE, RoundingMode.HALF_UP);
 		} catch (ArithmeticException e) {
-			mdrRate = new BigDecimal(0);
+			mdrRate = BigDecimal.ZERO;
 		}
 		return mdrRate.multiply(sgdAmount);
 	}
@@ -113,7 +113,7 @@ public class WirecardUtils {
 		try {
 			mcr = merchantCommissionRate.divide(new BigDecimal(100));
 		} catch (Exception e) {
-			mcr = new BigDecimal(0);
+			mcr = BigDecimal.ZERO;
 		}
 		return sgdAmount.multiply(mcr);
 	}

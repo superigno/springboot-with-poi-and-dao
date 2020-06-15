@@ -35,7 +35,7 @@ public class MerchantService implements IMerchantService {
 		list.forEach(obj -> {
 			final String merchantId = ((String) obj[0]).substring(6);
 			final String merchantCommissionRateString = (String) obj[1];
-			BigDecimal merchantCommissionRateBigDecimal = new BigDecimal(0);			
+			BigDecimal merchantCommissionRateBigDecimal = BigDecimal.ZERO;			
 			try {
 				merchantCommissionRateBigDecimal = new BigDecimal(merchantCommissionRateString);
 			} catch (Exception e) {

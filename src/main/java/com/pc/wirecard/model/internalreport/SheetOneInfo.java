@@ -18,7 +18,7 @@ public class SheetOneInfo {
     private String cardNbr;
     private String transDate;
     private String ccy;
-    private BigDecimal transAmt = new BigDecimal(0);
+    private BigDecimal transAmt = BigDecimal.ZERO;
     private String authCode;
     private String cardType;
     private String onUsOffUsFlag;
@@ -27,22 +27,22 @@ public class SheetOneInfo {
     private String description;
     private String postDate;
     private String submitCcy;
-    private BigDecimal submitAmt = new BigDecimal(0);
+    private BigDecimal submitAmt = BigDecimal.ZERO;
     private String subMedia;
     private String logicModule;
     private String qualIndicator;
     private String dataEntryMode;
     private String mcc;
     private String gapOsMode;
-    private BigDecimal oGrossAmt = new BigDecimal(0);
-    private BigDecimal oComAmt = new BigDecimal(0);
-    private BigDecimal oVatAmt = new BigDecimal(0);
-    private BigDecimal oOthAmt = new BigDecimal(0);
-    private BigDecimal oNetAmt = new BigDecimal(0);
+    private BigDecimal oGrossAmt = BigDecimal.ZERO;
+    private BigDecimal oComAmt = BigDecimal.ZERO;
+    private BigDecimal oVatAmt = BigDecimal.ZERO;
+    private BigDecimal oOthAmt = BigDecimal.ZERO;
+    private BigDecimal oNetAmt = BigDecimal.ZERO;
     private String rocText;
-    private BigDecimal sgdAmount = new BigDecimal(0);
-    private BigDecimal sgdPayment = new BigDecimal(0);
-    private BigDecimal exceptionSgdAmount = new BigDecimal(0);
+    private BigDecimal sgdAmount = BigDecimal.ZERO;
+    private BigDecimal sgdPayment = BigDecimal.ZERO;
+    private BigDecimal exceptionSgdAmount = BigDecimal.ZERO;
     
 	public String getOrg() {
 		return org;

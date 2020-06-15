@@ -38,7 +38,7 @@ public class Sheet1CellInfoTest {
     private String ccy;
 	
 	@ExcelCell(9)
-    private BigDecimal transAmt = new BigDecimal(0);
+    private BigDecimal transAmt = BigDecimal.ZERO;
 	
 	@ExcelCell(10)
     private String authCode;
@@ -65,7 +65,7 @@ public class Sheet1CellInfoTest {
     private String submitCcy;
 	
 	@ExcelCell(18)
-    private BigDecimal submitAmt = new BigDecimal(0);
+    private BigDecimal submitAmt = BigDecimal.ZERO;
 	
 	@ExcelCell(19)
     private String subMedia;
@@ -86,31 +86,31 @@ public class Sheet1CellInfoTest {
     private String gapOsMode;
 	
 	@ExcelCell(25)
-    private BigDecimal oGrossAmt = new BigDecimal(0);
+    private BigDecimal oGrossAmt = BigDecimal.ZERO;
 	
 	@ExcelCell(26)
-    private BigDecimal oComAmt = new BigDecimal(0);
+    private BigDecimal oComAmt = BigDecimal.ZERO;
 	
 	@ExcelCell(27)
-    private BigDecimal oVatAmt = new BigDecimal(0);
+    private BigDecimal oVatAmt = BigDecimal.ZERO;
 	
 	@ExcelCell(28)
-    private BigDecimal oOthAmt = new BigDecimal(0);
+    private BigDecimal oOthAmt = BigDecimal.ZERO;
 	
 	@ExcelCell(29)
-    private BigDecimal oNetAmt = new BigDecimal(0);
+    private BigDecimal oNetAmt = BigDecimal.ZERO;
 	
 	@ExcelCell(30)
     private String rocText;
 	
 	@ExcelCell(31)
-    private BigDecimal sgdAmount = new BigDecimal(0);
+    private BigDecimal sgdAmount = BigDecimal.ZERO;
 	
 	@ExcelCell(32)
-    private BigDecimal sgdPayment = new BigDecimal(0);
+    private BigDecimal sgdPayment = BigDecimal.ZERO;
 	
 	@ExcelCell(33)
-    private BigDecimal exceptionSgdAmount = new BigDecimal(0);
+    private BigDecimal exceptionSgdAmount = BigDecimal.ZERO;
 
 	public int getRowIndex() {
 		return rowIndex;

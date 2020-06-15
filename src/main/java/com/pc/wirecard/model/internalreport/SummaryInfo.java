@@ -11,14 +11,14 @@ public class SummaryInfo implements Comparable<SummaryInfo> {
 	
 	private int order;
 	private String description;
-    private BigDecimal grossAmountFromCiti = new BigDecimal(0);
-    private BigDecimal settledByCitiToPc = new BigDecimal(0);
-    private BigDecimal citiMdrCharge = new BigDecimal(0);
-    private BigDecimal transactionAmountMatch = new BigDecimal(0);
-    private BigDecimal transactionAmountSgd = new BigDecimal(0);
-    private BigDecimal settlementAmountToMerchant = new BigDecimal(0);
-    private BigDecimal mdrPayByMerchant = new BigDecimal(0);
-    private BigDecimal merchantCommission = new BigDecimal(0);
+    private BigDecimal grossAmountFromCiti = BigDecimal.ZERO;
+    private BigDecimal settledByCitiToPc = BigDecimal.ZERO;
+    private BigDecimal citiMdrCharge = BigDecimal.ZERO;
+    private BigDecimal transactionAmountMatch = BigDecimal.ZERO;
+    private BigDecimal transactionAmountSgd = BigDecimal.ZERO;
+    private BigDecimal settlementAmountToMerchant = BigDecimal.ZERO;
+    private BigDecimal mdrPayByMerchant = BigDecimal.ZERO;
+    private BigDecimal merchantCommission = BigDecimal.ZERO;
     
 	public String getDescription() {
 		return description;

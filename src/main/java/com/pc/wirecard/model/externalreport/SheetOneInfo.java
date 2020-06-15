@@ -13,10 +13,10 @@ public class SheetOneInfo {
 	private String date;
 	private String cardNumber;    
     private String authorisationNumber;
-    private BigDecimal transactionSales = new BigDecimal(0);
-    private BigDecimal mdrRate = new BigDecimal(0);
-    private BigDecimal commission = new BigDecimal(0);
-    private BigDecimal creditAmount = new BigDecimal(0);
+    private BigDecimal transactionSales = BigDecimal.ZERO;
+    private BigDecimal mdrRate = BigDecimal.ZERO;
+    private BigDecimal commission = BigDecimal.ZERO;
+    private BigDecimal creditAmount = BigDecimal.ZERO;
     private String remark;
     private String rrn;
     
